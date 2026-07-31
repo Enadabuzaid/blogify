@@ -1,0 +1,89 @@
+{
+    "name": "enadstack/blogify",
+    "description": "A headless, multi-tenant-aware content engine for Laravel SaaS products. Articles, taxonomy, media and SEO for both platform-level and per-tenant content, with first-class RTL/Arabic support.",
+    "keywords": [
+        "laravel",
+        "blog",
+        "cms",
+        "content",
+        "headless",
+        "multi-tenant",
+        "seo",
+        "rtl",
+        "arabic"
+    ],
+    "homepage": "https://github.com/Enadabuzaid/blogify",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Enad Abu Zaid",
+            "email": "enad.abuzaid15@gmail.com",
+            "homepage": "https://enadabuzaid.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/contracts": "^11.0|^12.0|^13.0",
+        "illuminate/database": "^11.0|^12.0|^13.0",
+        "illuminate/events": "^11.0|^12.0|^13.0",
+        "illuminate/support": "^11.0|^12.0|^13.0"
+    },
+    "require-dev": {
+        "larastan/larastan": "^2.9|^3.0",
+        "laravel/pint": "^1.30",
+        "orchestra/testbench": "^9.0|^10.0|^11.0",
+        "pestphp/pest": "^3.0|^4.0",
+        "pestphp/pest-plugin-laravel": "^3.0|^4.0",
+        "phpstan/phpstan": "^1.10|^2.0",
+        "spatie/laravel-medialibrary": "^11.0"
+    },
+    "suggest": {
+        "spatie/laravel-medialibrary": "Enables SpatieMediaAdapter, reusing your existing media conversions",
+        "stancl/tenancy": "Enables StanclOwnerResolver for database-per-tenant setups",
+        "spatie/laravel-multitenancy": "Enables SpatieOwnerResolver"
+    },
+    "autoload": {
+        "psr-4": {
+            "Enadstack\\Blogify\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Enadstack\\Blogify\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/pest",
+        "test-coverage": "vendor/bin/pest --coverage",
+        "analyse": "vendor/bin/phpstan analyse",
+        "format": "vendor/bin/pint",
+        "check": [
+            "@format",
+            "@analyse",
+            "@test"
+        ]
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Enadstack\\Blogify\\BlogifyServiceProvider"
+            ],
+            "aliases": {
+                "Blogify": "Enadstack\\Blogify\\Facades\\Blogify"
+            }
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "support": {
+        "issues": "https://github.com/Enadabuzaid/blogify/issues",
+        "source": "https://github.com/Enadabuzaid/blogify"
+    }
+}
