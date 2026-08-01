@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Enadstack\Blogify\Media\NativeMediaAdapter;
 use Enadstack\Blogify\Resolvers\Owners\AuthOwnerResolver;
+use Enadstack\Blogify\Resolvers\Owners\CallbackOwnerResolver;
 use Enadstack\Blogify\Resolvers\Owners\ContainerOwnerResolver;
 use Enadstack\Blogify\Resolvers\Owners\NullOwnerResolver;
 use Illuminate\Support\Facades\File;
@@ -194,4 +195,27 @@ it('falls back to en when no locales are given', function () {
     expect(require config_path('blogify.php'))
         ->toHaveKey('locales')
         ->and((require config_path('blogify.php'))['locales']['supported'])->toBe(['en']);
+});
+
+/*
+ * The published config has to satisfy Pint's ordered_imports, or every
+ * application that runs the installer inherits a lint failure it did not write.
+ */
+it('keeps the config imports alphabetically ordered', function () {
+    $this->artisan('blogify:install', [
+        '--mode' => 'shared',
+        '--key-type' => 'id',
+        '--resolver' => CallbackOwnerResolver::class,
+        '--media-adapter' => NativeMediaAdapter::class,
+        '--locales' => 'ar,en',
+    ])->assertSuccessful();
+
+    preg_match_all('/^use (.+);$/m', File::get(config_path('blogify.php')), $matches);
+
+    $imports = $matches[1];
+    $sorted = $imports;
+    usort($sorted, 'strcasecmp');
+
+    expect($imports)->toContain(CallbackOwnerResolver::class)
+        ->and($imports)->toBe($sorted);
 });

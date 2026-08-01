@@ -5,6 +5,12 @@ All notable changes to `enadstack/blogify` will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2026-08-01
+
+### Fixed
+
+- `blogify:install` appended new `use` statements to the published config instead of inserting them in alphabetical order, leaving every application that ran the installer with a Pint `ordered_imports` failure it had not written.
+
 ## [1.0.0] - 2026-07-31
 
 ### Added

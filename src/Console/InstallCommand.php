@@ -280,20 +280,34 @@ class InstallCommand extends Command
 
     /**
      * Add a `use` statement for a class the shipped config does not import.
+     *
+     * Inserted in alphabetical position rather than appended, so the published
+     * config still satisfies Pint's ordered_imports. Appending would leave every
+     * application that runs this command with a lint failure it did not write.
      */
     protected function ensureImport(string $contents, string $class): string
     {
-        $import = 'use '.ltrim($class, '\\').';';
+        $class = ltrim($class, '\\');
+        $import = 'use '.$class.';';
 
         if (str_contains($contents, $import)) {
             return $contents;
         }
 
-        // Insert after the last existing import so the block stays together.
-        if (preg_match_all('/^use .+;$/m', $contents, $matches, PREG_OFFSET_CAPTURE) === false) {
+        if (preg_match_all('/^use (.+);$/m', $contents, $matches, PREG_OFFSET_CAPTURE) !== 1
+            && $matches[0] === []) {
             return $contents;
         }
 
+        foreach ($matches[1] as $index => [$existing, $_]) {
+            if (strcasecmp($existing, $class) > 0) {
+                $offset = $matches[0][$index][1];
+
+                return substr($contents, 0, $offset).$import."\n".substr($contents, $offset);
+            }
+        }
+
+        // Sorts after everything already imported.
         $last = end($matches[0]);
 
         if ($last === false) {
